@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+#include <time.h>
 
 const char PLAYER = 'X';
 const char COMPUTER = 'O';
@@ -10,7 +11,9 @@ void printBoard();
 void createBoard();
 int checkFreeSpaces();
 void playerMove();
+void computerMove();
 char checkWinner();
+void printWinner(char);
 
 int main () {
     createBoard();
@@ -18,11 +21,26 @@ int main () {
      
     while (winner == ' ' && checkFreeSpaces() != 0) {
         printBoard();
+        
         playerMove();
         winner = checkWinner();
-    }
-}
+        if (winner != ' ' || checkFreeSpaces() == 0) {
+            break;
+        }
 
+        computerMove();
+        winner = checkWinner();
+        if (winner != ' ' || checkFreeSpaces() == 0) {
+            break;
+        }
+    }
+
+    printBoard();
+    printWinner(winner);
+
+    return 0;
+}
+ 
 void printBoard() {
     printf(" %c | %c | %c \n", space[0][0], space[0][1], space[0][2]);
     printf("---|---|---\n");
@@ -76,5 +94,66 @@ void playerMove() {
 }
 
 char checkWinner() {
+    // check rows
+    for (int i = 0; i<3; i++) {
+        if ((space[i][0] == space[i][1]) && (space[i][1] == space[i][2])) {
+            return space[i][0];
+        }
+    }
+
+    // check cols
+    for (int i = 0; i<3; i++) {
+        if ((space[0][i] == space[1][i]) && (space[1][i] == space[2][i])) {
+            return space[0][i];
+        }
+    }
+
+    // check diagonals
+    if ((space[0][0] == space[1][1]) && (space[1][1] == space[2][2])) {
+        return space[0][0];
+    }
+    if ((space[0][2] == space[1][1]) && (space[1][1] == space[2][0])) {
+        return space[0][2];
+    }
+
+    return ' '; // no winner
+}
+
+void computerMove() {
+    srand(time(0));
+    int row;
+    int col;
+
+    if (checkFreeSpaces() > 0) {
+        // pick an open space at random
+        do {
+            row = rand() % 3;
+            col = rand() % 3;
+        } while (space[row][col] != ' ');
+
+        space[row][col] = COMPUTER; // place mark
+    } else { // no spaces open, nobody won
+        printWinner(' ');
+    }
+}
+
+void printWinner(char winner) {
+    switch (winner)
+    {
+    case 'X':
+        printf("YOU WIN!\n");
+        break;
+
+    case 'O':
+        printf("YOU LOSE!\n");
+        break;
     
+    case ' ':
+        printf("Draw :(\n");
+        break;
+
+    default:
+        printf("Something went wrong\n");
+        break;
+    }
 }
