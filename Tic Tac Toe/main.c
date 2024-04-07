@@ -1,16 +1,26 @@
 #include <stdio.h>
 #include <string.h>
 
-#define PI 3.14159625
+const char PLAYER = 'X';
+const char COMPUTER = 'O';
 
 char space[3][3];
 
 void printBoard();
 void createBoard();
+int checkFreeSpaces();
+void playerMove();
+char checkWinner();
 
 int main () {
     createBoard();
-    printBoard();
+    char winner = ' ';
+     
+    while (winner == ' ' && checkFreeSpaces() != 0) {
+        printBoard();
+        playerMove();
+        winner = checkWinner();
+    }
 }
 
 void printBoard() {
@@ -27,4 +37,44 @@ void createBoard() {
             space[i][j] = ' ';
         }
     }
+}
+
+int checkFreeSpaces() {
+    int freeSpaces = 9;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (space[i][j] != ' ') {
+                freeSpaces--;
+            }
+        }
+    }
+
+    return freeSpaces;
+}
+
+void playerMove() {
+    int row;
+    int col;
+
+    do {
+        printf("Where would you like to move?\n");
+        printf("Enter row [1-3]: ");
+        scanf("%d", &row);
+        row--;
+        printf("Enter col [1-3]: ");
+        scanf("%d", &col);
+        col--;
+
+        if(space[row][col] != ' ') {
+            printf("Invalid move!\n");
+        } else {
+            space[row][col] = PLAYER;
+            break;
+        }
+    } while (space[row][col] != ' ');
+}
+
+char checkWinner() {
+    
 }
