@@ -35,6 +35,14 @@ int main () {
         printf("Storm");
     else // speed > 63
         printf("Hurricane");
+    printf(".\n");  // end constructed sentence
+
+    //  Question 11:
+    /* Is the following IF statement legal in C? */
+    int n = 0;
+    if (n >= 1 <= 10)
+        printf("n is between 1 and 10\n");
+    // Evaluates incorrectly because the first statement is tested, then the right statement is tested (and will always be true when n = 0
 
     return 0;
 }
